@@ -1,5 +1,4 @@
 ---
-# Checking workflow
 name: Checks
 
 on: [push]
