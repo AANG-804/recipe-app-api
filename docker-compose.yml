@@ -8,7 +8,31 @@ services:
         - DEV=true
     ports:
       - "8000:8000"
+    # docker 가상환경과 로컬환경을 매핑하여 서로의 업데이트 정보를 공유함
     volumes:
       - ./app:/app
+    # Listening on 0.0.0.0 means "listen on all interfaces". It's often overkill, sometimes a security concern, but generally harmless. It makes sense inside a Docker container
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
+    # app을 build하기 전에 db를 먼저 빌드한다는 뜻?
+    depends_on:
+      - db
+
+  db:
+    # Dockerhub에서 가져온 이미 만들어진 이미지 파일을 이용하는 것
+    image: postgres:13-alpine
+    volumes:
+      - dev-db-data:/vat/lib/postgressql/data
+    environment:
+      - POSTGRES_DB=devdb
+      # DB user 아이디 비밀번호 <- deploy할 때는 바꿔야함
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
+
+volumes:
+  dev-db-data:
