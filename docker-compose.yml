@@ -20,6 +20,8 @@ services:
       - DB_USER=devuser
       - DB_PASS=changeme
     # app을 build하기 전에 db를 먼저 빌드한다는 뜻?
+    # 근데 서비스가 시작할 때 설치되는 것까지는 보장해주는데 app을 실행할 때 db가 실행되고 있는거까지는 보장 안해줌
+    # app(Postgresql)가 starting 하는 중간에 app이 starting이 먼저 끝나는 경우 타이밍이 깨짐
     depends_on:
       - db
 
